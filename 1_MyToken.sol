@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: MIT
 
-pragma solidity >=0.8.2 <0.9.0;
+pragma solidity 0.8.18;
 
 /**
  * @title MyToken
@@ -23,30 +23,21 @@ pragma solidity >=0.8.2 <0.9.0;
 */
 
 contract MyToken {
-    string public tName;
-    string public symb;
-    uint256 public tSupply;
+    string public tokenName = "META";
+    string public tokenAbbrv = "MTA";
+    uint public totalSupply = 0;
 
-    mapping(address => uint256) public balances;
+    mapping(address => uint) public balances;
 
-    constructor(string memory _tName, string memory _symb, uint256 _initSupply) 
-    {
-        tName = _tName;
-        symb = _symb;
-        tSupply = _initSupply;
-        balances[msg.sender] = _initSupply;
+    function mint(address _address, uint256 _value) public {
+        totalSupply += _value;
+        balances[_address] += _value;
     }
 
-    receive() external payable {
-    }
-
-    function mint(address _to, uint256 _value) public {
-        tSupply += _value;
-        balances[_to] += _value;
-    }
-
-    function burn(address _from, uint256 _value) public {
-        tSupply -= _value;
-        balances[_from] -= _value;
+    function burn(address _address, uint256 _value) public {
+        if (balances[_address] >= _value){
+            totalSupply -= _value;
+            balances[_address] -= _value;
+        }
     }
 }
